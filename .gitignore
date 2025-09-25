@@ -19,5 +19,11 @@ var/
 .cache
 .project
 .pydevproject
-
-
+*.pt 
+*.pth
+*.log
+*.pkl 
+finetune_data/
+pretrain_data/
+runs/
+pt/
