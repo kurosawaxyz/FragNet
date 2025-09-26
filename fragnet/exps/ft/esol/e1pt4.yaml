@@ -2,7 +2,7 @@ seed: 123
 # seed: 4
 # seed: 456
 data_seed: None
-exp_dir: exps/ft/esol
+exp_dir: exps/ft/egfr
 model_version: gat2
 device: gpu
 atom_features: 167
@@ -55,8 +55,8 @@ finetune:
   es_patience: 100
   chkpoint_name: ${exp_dir}/ft.pt
   train: 
-    path: finetune_data/moleculenet_exp1s/esol/train.pkl # 20 exp node features
+    path: finetune_data/mylab_egfr/egfr/train.pkl # 20 exp node features
   val: 
-    path: finetune_data/moleculenet_exp1s/esol/val.pkl # 20 exp node features
+    path: finetune_data/mylab_egfr/egfr/val.pkl # 20 exp node features
   test:
-    path: finetune_data/moleculenet_exp1s/esol/test.pkl # 20 exp node features
+    path: finetune_data/mylab_egfr/egfr/test.pkl # 20 exp node features
