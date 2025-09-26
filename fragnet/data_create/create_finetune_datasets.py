@@ -70,11 +70,12 @@ if __name__ == "__main__":
     elif args.dataset_name == "moleculenet":
 
         create_moleculenet_dataset("MoleculeNet", args.dataset_subset.lower(), args)
+        
     elif args.dataset_name == "moleculedataset":
         create_moleculenet_dataset("MoleculeDataset", args.dataset_subset.lower(), args)
 
-    elif args.dataset_name == "unimol":
-        create_moleculenet_dataset_from_unimol_data(args)
+    # elif args.dataset_name == "unimol":
+    #     create_moleculenet_dataset_from_unimol_data(args)
 
     elif args.dataset_name == "simsgt":
         create_moleculenet_dataset_simsgt(args.dataset_subset.lower(), args)
