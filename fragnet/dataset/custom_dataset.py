@@ -30,7 +30,9 @@ class MoleculeDataset:
         
     def get_egfr(self):
         # TODO: fix import error -> write loader_egfr.py for egfr dataset
-        from loader_egfr import _load_egfr_dataset
+
+        # Fix bug: Change your import to be relative, not absolute.
+        from .loader_molebert import _load_egfr_dataset
 
         raw_path = f"{self.data_dir}/egfr/raw/egfr_data.csv"
         smiles_list, rdkit_mol_objs, labels = _load_egfr_dataset(raw_path)

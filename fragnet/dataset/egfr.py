@@ -28,6 +28,12 @@ def create_egfr_dataset(name, args):
             ds, smiles, return_smiles=True
         )
 
+    print(f"train: {len(train)}, val: {len(val)}, test: {len(test)}")
+
+    # Create directory to save the dataset in case it does not exist
+    os.makedirs(f"{args.output_dir}/{name}", exist_ok=True)
+
+    # Save the raw splitted dataset
     torch.save(train, f"{args.output_dir}/{name}/train.pt")
     torch.save(val, f"{args.output_dir}/{name}/val.pt")
     torch.save(test, f"{args.output_dir}/{name}/test.pt")

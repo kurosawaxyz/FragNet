@@ -489,6 +489,25 @@ class MoleculeDataset(InMemoryDataset):
                 data_list.append(data)
                 data_smiles_list.append(smiles_list[i])
 
+
+        # TODO: implement egfr dataset loading function
+        elif self.dataset == "egfr":
+            from loader_molebert import _load_egfr_dataset
+
+            smiles_list, rdkit_mol_objs, labels = _load_egfr_dataset(self.raw_paths[0])
+            for i in range(len(smiles_list)):
+                print(i)
+                rdkit_mol = rdkit_mol_objs[i]
+                
+                data = mol_to_graph_data_obj_simple(rdkit_mol)
+                # manually add mol id
+                data.id = torch.tensor([i])  # id here is the index of the mol in
+                # the dataset
+                data.y = torch.tensor([labels[i]])
+                data_list.append(data)
+                data_smiles_list.append(smiles_list[i])
+
+
         elif self.dataset == "hiv":
             smiles_list, rdkit_mol_objs, labels = _load_hiv_dataset(self.raw_paths[0])
             for i in range(len(smiles_list)):
@@ -885,6 +904,35 @@ class MoleculeFingerprintDataset(data.Dataset):
                         fold = torch.tensor([2])
                     data_list.append({"fp_arr": fp_arr, "id": id, "y": y, "fold": fold})
                     data_smiles_list.append(smiles_list[i])
+
+
+
+        # TODO: add egfr dataset loading function
+        elif self.dataset == "egfr":
+            smiles_list, rdkit_mol_objs, labels = _load_egfr_dataset(
+                os.path.join(self.root, "raw/egfr.csv")
+            )
+            print("processing")
+            for i in range(len(smiles_list)):
+                print(i)
+                rdkit_mol = rdkit_mol_objs[i]
+                if rdkit_mol != None:
+                    # # convert aromatic bonds to double bonds
+                    fp_arr = create_circular_fingerprint(
+                        rdkit_mol, self.radius, self.size, self.chirality
+                    )
+                    fp_arr = torch.tensor(fp_arr)
+
+                    # manually add mol id
+                    id = torch.tensor([i])  # id here is the index of the mol in
+                    # the dataset
+                    y = torch.tensor([labels[i]])
+                    data_list.append({"fp_arr": fp_arr, "id": id, "y": y})
+                    data_smiles_list.append(smiles_list[i])
+
+
+
+
         elif self.dataset == "tox21":
             smiles_list, rdkit_mol_objs, labels = _load_tox21_dataset(
                 os.path.join(self.root, "raw/tox21.csv")
@@ -971,6 +1019,32 @@ class MoleculeFingerprintDataset(data.Dataset):
             return dataset
         else:
             return self.data_list[index]
+
+
+
+# TODO: add _load_egfr_dataset function
+def _load_egfr_dataset(input_path):
+    """
+
+    :param input_path:
+    :return: list of smiles, list of rdkit mol obj, np.array containing the
+    labels
+    """
+
+    input_df = pd.read_csv(input_path, sep=",")
+    smiles_list = input_df["smiles"]
+    rdkit_mol_objs_list = [AllChem.MolFromSmiles(s) for s in smiles_list]
+    labels = input_df["Label"]
+
+    # assign -1 to inactive, 1 to active
+    labels = labels.fillna(-1)      # In case there are NaN values, but in this dataset there aren't any
+    labels = labels.replace("inactive", -1)
+    labels = labels.replace("active", 1)
+
+    assert len(smiles_list) == len(rdkit_mol_objs_list)
+    assert len(smiles_list) == len(labels)
+    return smiles_list, rdkit_mol_objs_list, labels.values
+
 
 
 def _load_tox21_dataset(input_path):
