@@ -8,6 +8,7 @@ from fragnet.dataset.simsgt import create_moleculenet_dataset_simsgt
 from fragnet.dataset.dta import create_dta_dataset
 from fragnet.dataset.cdrp import create_cdrp_dataset
 from fragnet.dataset.scaffold_split_from_df import create_scaffold_split_data_from_df
+from fragnet.dataset.egfr import create_egfr_dataset
 
 if __name__ == "__main__":
 
@@ -70,7 +71,7 @@ if __name__ == "__main__":
     elif args.dataset_name == "moleculenet":
 
         create_moleculenet_dataset("MoleculeNet", args.dataset_subset.lower(), args)
-        
+
     elif args.dataset_name == "moleculedataset":
         create_moleculenet_dataset("MoleculeDataset", args.dataset_subset.lower(), args)
 
@@ -89,3 +90,6 @@ if __name__ == "__main__":
     elif args.dataset_name in ["gdsc", "gdsc_full", "ccle"]:
         print("args.use_genes0: ", args.use_genes)
         create_cdrp_dataset(args)
+
+    elif args.dataset_name == "mylab" :
+        create_egfr_dataset(args.dataset_subset.lower(), args)

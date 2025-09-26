@@ -24,6 +24,26 @@ class MoleculeDataset:
             return self.get_hiv_dataset()
         elif self.name == "muv":
             return self.get_muv()
+        
+        elif self.name == "egfr":
+            return self.get_egfr()
+        
+    def get_egfr(self):
+        # TODO: fix import error -> write loader_egfr.py for egfr dataset
+        from loader_egfr import _load_egfr_dataset
+
+        raw_path = f"{self.data_dir}/egfr/raw/egfr_data.csv"
+        smiles_list, rdkit_mol_objs, labels = _load_egfr_dataset(raw_path)
+
+        assert len(smiles_list) == len(labels)
+        data = []
+        for i in range(len(smiles_list)):
+            y = [labels[i]]
+            smiles = smiles_list[i]
+            if smiles != None:
+                data.append(Data(smiles=smiles, y=y))
+
+        return data
 
     def get_muv(self):
         from loader_molebert import _load_muv_dataset
